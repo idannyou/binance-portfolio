@@ -59,9 +59,9 @@ export default function BasicTable() {
         <TableHead>
           <TableRow>
             <TableCell>Symbol</TableCell>
-            <TableCell align="right">Time</TableCell>
             <TableCell align="right">Last Price</TableCell>
             <TableCell align="right">Total Holding</TableCell>
+            <TableCell align="right">Time</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -70,9 +70,9 @@ export default function BasicTable() {
               <TableCell component="th" scope="row">
                 {row.symbol}
               </TableCell>
-              <TableCell align="right">{row.time}</TableCell>
               <TableCell align="right">{row.lastPrice}</TableCell>
               <TableCell align="right">{row.totalHolding}</TableCell>
+              <TableCell align="right">{row.time}</TableCell>
             </TableRow>
           ))}
         </TableBody>
