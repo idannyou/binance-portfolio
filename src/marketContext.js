@@ -31,54 +31,61 @@ import React from "react";
 
 const MarketContext = React.createContext();
 
+function connectToBinance(setData) {
+  const streamUrl = "wss://stream.binance.com:9443/ws";
+  const conn = new WebSocket(streamUrl);
+
+  const symbols = [
+    "solusdt@ticker",
+    "rsrusdt@ticker",
+    "oceanusdt@ticker",
+    "mirusdt@ticker",
+    "1inchusdt@ticker",
+    "bandusdt@ticker",
+    "bnbusdt@ticker",
+    "thetausdt@ticker",
+    "xtzusdt@ticker",
+  ];
+
+  conn.onopen = function () {
+    conn.send(
+      JSON.stringify({
+        method: "SUBSCRIBE",
+        params: symbols,
+        id: 1,
+      })
+    );
+  };
+
+  conn.onmessage = function (evt) {
+    if (evt.data) {
+      const streamData = JSON.parse(evt.data);
+      if (streamData.s) {
+        setData((oldData) => {
+          let data = { ...oldData };
+          data[streamData.s] = streamData;
+          return data;
+        });
+      }
+    }
+  };
+
+  return function unsubscribe() {
+    conn.send(
+      JSON.stringify({
+        method: "UNSUBSCRIBE",
+        params: symbols,
+        id: 1,
+      })
+    );
+  };
+}
+
 export function MarketProvider({ children }) {
   const [data, setData] = React.useState({});
 
   React.useEffect(() => {
-    const streamUrl = "wss://stream.binance.com:9443/ws";
-    const conn = new WebSocket(streamUrl);
-    conn.onopen = function () {
-      conn.send(
-        JSON.stringify({
-          method: "SUBSCRIBE",
-          params: [
-            "solusdt@ticker",
-            "rsrusdt@ticker",
-            "oceanusdt@ticker",
-            "mirusdt@ticker",
-            "1inchusdt@ticker",
-            "bandusdt@ticker",
-            "bnbusdt@ticker",
-            "thetausdt@ticker",
-            "xtzusdt@ticker",
-          ],
-          id: 1,
-        })
-      );
-    };
-
-    conn.onmessage = function (evt) {
-      if (evt.data) {
-        const streamData = JSON.parse(evt.data);
-        if (streamData.s) {
-          setData((oldData) => {
-            let data = { ...oldData };
-            data[streamData.s] = streamData;
-            return data;
-          });
-        }
-      }
-    };
-
-    return function unsubscribe() {
-      conn.send(
-        JSON.stringify({
-          method: "UNSUBSCRIBE",
-          params: ["btcusdt@ticker"],
-          id: 1,
-        })
-      );
-    };
+    connectToBinance(setData);
   }, []);
 
   return (
