@@ -13,7 +13,7 @@ import { SimpleCard } from "./TotalCard";
 
 const useStyles = makeStyles({
   table: {
-    minWidth: 650,
+    minWidth: 300,
   },
   sticky: {
     position: "sticky",
@@ -61,7 +61,7 @@ export default function BasicTable() {
 
   return (
     <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="simple table" size="small">
+      <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell className={classes.sticky}>Symbol</TableCell>
