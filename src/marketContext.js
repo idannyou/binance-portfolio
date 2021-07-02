@@ -41,7 +41,17 @@ export function MarketProvider({ children }) {
       conn.send(
         JSON.stringify({
           method: "SUBSCRIBE",
-          params: ["btcusdt@ticker"],
+          params: [
+            "solusdt@ticker",
+            "rsrusdt@ticker",
+            "oceanusdt@ticker",
+            "mirusdt@ticker",
+            "1inchusdt@ticker",
+            "bandusdt@ticker",
+            "bnbusdt@ticker",
+            "thetausdt@ticker",
+            "xtzusdt@ticker",
+          ],
           id: 1,
         })
       );
