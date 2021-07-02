@@ -70,5 +70,5 @@ export function Market() {
 
   console.log({ data });
 
-  return <table>test</table>;
+  return <table></table>;
 }
