@@ -8,6 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { useMarket } from "./marketContext";
+import { myHoldings } from "./myHoldings";
 
 const useStyles = makeStyles({
   table: {
@@ -19,8 +20,8 @@ function getTime(date) {
   return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 }
 
-function createData(symbol, time, lastPrice) {
-  return { symbol, time, lastPrice };
+function createData(symbol, time, lastPrice, myHoldingPrice) {
+  return { symbol, time, lastPrice, myHoldingPrice };
 }
 
 export default function BasicTable() {
@@ -28,13 +29,14 @@ export default function BasicTable() {
 
   const marketData = useMarket();
 
-  console.log({ marketData });
-
   const rows = Object.keys(marketData).map((symbol) => {
+    const lastPrice = parseFloat(marketData[symbol].c);
+    const myHoldingPrice = lastPrice * myHoldings[symbol];
     return createData(
       marketData[symbol].s,
       getTime(new Date(marketData[symbol].E)),
-      marketData[symbol].c
+      lastPrice,
+      myHoldingPrice
     );
   });
 
@@ -46,6 +48,7 @@ export default function BasicTable() {
             <TableCell>Symbol</TableCell>
             <TableCell align="right">Time</TableCell>
             <TableCell align="right">Last Price</TableCell>
+            <TableCell align="right">My Holding Price</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -56,6 +59,7 @@ export default function BasicTable() {
               </TableCell>
               <TableCell align="right">{row.time}</TableCell>
               <TableCell align="right">{row.lastPrice}</TableCell>
+              <TableCell align="right">{row.myHoldingPrice}</TableCell>
             </TableRow>
           ))}
         </TableBody>
