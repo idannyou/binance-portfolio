@@ -29,13 +29,15 @@ import React from "react";
 //   },
 // };
 
-export function Market() {
+const MarketContext = React.createContext();
+
+export function MarketProvider({ children }) {
   const [data, setData] = React.useState({});
 
   React.useEffect(() => {
     const streamUrl = "wss://stream.binance.com:9443/ws";
     const conn = new WebSocket(streamUrl);
-    conn.onopen = function (evt) {
+    conn.onopen = function () {
       conn.send(
         JSON.stringify({
           method: "SUBSCRIBE",
@@ -50,8 +52,9 @@ export function Market() {
         const streamData = JSON.parse(evt.data);
         if (streamData.s) {
           setData((oldData) => {
-            oldData[streamData.s] = streamData;
-            return oldData;
+            let data = { ...oldData };
+            data[streamData.s] = streamData;
+            return data;
           });
         }
       }
@@ -68,7 +71,15 @@ export function Market() {
     };
   }, []);
 
-  console.log({ data });
+  return (
+    <MarketContext.Provider value={data}>{children}</MarketContext.Provider>
+  );
+}
 
-  return <table></table>;
+export function useMarket() {
+  const context = React.useContext(MarketContext);
+  if (context === undefined) {
+    throw new Error("useMarket must be used within a MarketProvider");
+  }
+  return context;
 }

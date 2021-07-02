@@ -1,14 +1,11 @@
-import logo from "./logo.svg";
-import "./App.css";
-import { Market } from "./Market";
+import { MarketProvider } from "./marketContext";
 import BasicTable from "./Table";
 
 function App() {
   return (
-    <div className="App">
-      <Market />
+    <MarketProvider>
       <BasicTable />
-    </div>
+    </MarketProvider>
   );
 }
 
