@@ -15,6 +15,12 @@ const useStyles = makeStyles({
   table: {
     minWidth: 650,
   },
+  sticky: {
+    position: "sticky",
+    left: 0,
+    background: "white",
+    boxShadow: "5px 2px 5px grey",
+  },
 });
 
 function getTime(date) {
@@ -58,7 +64,7 @@ export default function BasicTable() {
       <Table className={classes.table} aria-label="simple table" size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Symbol</TableCell>
+            <TableCell className={classes.sticky}>Symbol</TableCell>
             <TableCell align="right">Last Price</TableCell>
             <TableCell align="right">Total Holding</TableCell>
             <TableCell align="right">Time</TableCell>
@@ -67,7 +73,7 @@ export default function BasicTable() {
         <TableBody>
           {rows.map((row) => (
             <TableRow key={row.name}>
-              <TableCell component="th" scope="row">
+              <TableCell className={classes.sticky} component="th" scope="row">
                 {row.symbol}
               </TableCell>
               <TableCell align="right">{row.lastPrice}</TableCell>
