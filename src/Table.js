@@ -21,8 +21,8 @@ function getTime(date) {
   return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 }
 
-function createData(symbol, time, lastPrice, myHoldingPrice) {
-  return { symbol, time, lastPrice, myHoldingPrice };
+function createData(symbol, time, lastPrice, totalHolding) {
+  return { symbol, time, lastPrice, totalHolding };
 }
 
 export default function BasicTable() {
@@ -32,17 +32,19 @@ export default function BasicTable() {
 
   const rows = Object.keys(marketData).map((symbol) => {
     const lastPrice = parseFloat(marketData[symbol].c);
-    const myHoldingPrice = lastPrice * myHoldings[symbol];
+    const totalHolding = lastPrice * myHoldings[symbol];
     return createData(
       marketData[symbol].s,
       getTime(new Date(marketData[symbol].E)),
       lastPrice,
-      myHoldingPrice
+      totalHolding.toFixed(2)
     );
   });
 
   const holdingPrices = Object.keys(marketData).map((symbol) => {
-    return parseFloat(marketData[symbol].c);
+    const lastPrice = parseFloat(marketData[symbol].c);
+    const totalHolding = lastPrice * myHoldings[symbol];
+    return totalHolding;
   });
 
   const totalHoldingPrice =
@@ -53,13 +55,13 @@ export default function BasicTable() {
 
   return (
     <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="simple table">
+      <Table className={classes.table} aria-label="simple table" size="small">
         <TableHead>
           <TableRow>
             <TableCell>Symbol</TableCell>
             <TableCell align="right">Time</TableCell>
             <TableCell align="right">Last Price</TableCell>
-            <TableCell align="right">My Holding Price</TableCell>
+            <TableCell align="right">Total Holding</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -70,7 +72,7 @@ export default function BasicTable() {
               </TableCell>
               <TableCell align="right">{row.time}</TableCell>
               <TableCell align="right">{row.lastPrice}</TableCell>
-              <TableCell align="right">{row.myHoldingPrice}</TableCell>
+              <TableCell align="right">{row.totalHolding}</TableCell>
             </TableRow>
           ))}
         </TableBody>
