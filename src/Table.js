@@ -9,6 +9,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { useMarket } from "./marketContext";
 import { myHoldings } from "./myHoldings";
+import { SimpleCard } from "./TotalCard";
 
 const useStyles = makeStyles({
   table: {
@@ -40,6 +41,16 @@ export default function BasicTable() {
     );
   });
 
+  const holdingPrices = Object.keys(marketData).map((symbol) => {
+    return parseFloat(marketData[symbol].c);
+  });
+
+  const totalHoldingPrice =
+    holdingPrices.length &&
+    holdingPrices.reduce((acc, currentValue) => {
+      return currentValue + acc;
+    });
+
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="simple table">
@@ -64,6 +75,7 @@ export default function BasicTable() {
           ))}
         </TableBody>
       </Table>
+      <SimpleCard total={totalHoldingPrice} />
     </TableContainer>
   );
 }
