@@ -81,11 +81,66 @@ function connectToBinance(setData) {
   };
 }
 
+function convertToBinanceShape(data) {
+  if (!data.data) {
+    return {};
+  }
+
+  const convertBuggyTime = parseInt(
+    parseFloat(data.data.time).toFixed(3).split(".").join("")
+  );
+
+  return {
+    c: data.data.last,
+    E: convertBuggyTime,
+    s: data.market,
+  };
+}
+
+function connectToFTX(setData) {
+  const streamUrl = "wss://ftx.com/ws/";
+  const conn = new WebSocket(streamUrl);
+
+  const symbols = ["RAY/USD", "FTT/USDT"];
+
+  conn.onopen = function () {
+    symbols.forEach((sym) => {
+      conn.send(
+        JSON.stringify({ op: "subscribe", channel: "ticker", market: sym })
+      );
+    });
+  };
+
+  conn.onmessage = function (evt) {
+    if (evt.data) {
+      const streamData = JSON.parse(evt.data);
+      let newShape = convertToBinanceShape(streamData);
+
+      if (newShape.s) {
+        setData((oldData) => {
+          let data = { ...oldData };
+          data[newShape.s] = newShape;
+          return data;
+        });
+      }
+    }
+  };
+
+  return function unsubscribe() {
+    symbols.forEach((sym) => {
+      conn.send(
+        JSON.stringify({ op: "unsubscribe", channel: "ticker", market: sym })
+      );
+    });
+  };
+}
+
 export function MarketProvider({ children }) {
   const [data, setData] = React.useState({});
 
   React.useEffect(() => {
     connectToBinance(setData);
+    connectToFTX(setData);
   }, []);
 
   return (
