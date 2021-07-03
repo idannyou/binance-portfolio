@@ -1,5 +1,5 @@
 export const myHoldings = {
-  BNBUSDT: 3.51,
+  BNBUSDT: 1.91,
   BANDUSDT: 680.01,
   RSRUSDT: 540000,
   MIRUSDT: 1921.705,
