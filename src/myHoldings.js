@@ -7,7 +7,7 @@ export const myHoldings = {
   SOLUSDT: 483.19,
   THETAUSDT: 988.55,
   OCEANUSDT: 8663,
-  XTZUSDT: 756,
+  XTZUSDT: 401,
   "RAY/USD": 1950,
   "FTT/USDT": 35.47,
 };
