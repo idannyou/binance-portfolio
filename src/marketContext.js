@@ -36,7 +36,7 @@ function connectToBinance(setData) {
   const conn = new WebSocket(streamUrl);
 
   const symbols = [
-    "usdcusdt@ticker",
+    "clvusdt@ticker",
     "rsrusdt@ticker",
     "oceanusdt@ticker",
     "mirusdt@ticker",
